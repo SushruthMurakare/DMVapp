@@ -3,6 +3,8 @@ from fastapi import FastAPI
 from sqlalchemy import select
 from db import SessionLocal
 from models import states, sections, topics
+from summarizeSection import router as summarize_section
+from submitReview import router as create_review
 
 app = FastAPI()
 
@@ -30,3 +32,7 @@ def get_topics(section_id: int):
     result = db.execute(select(topics).where(topics.c.section_id == section_id)).fetchall()
     db.close()
     return [dict(r._mapping) for r in result]
+
+app.include_router(summarize_section)
+app.include_router(create_review)
+
