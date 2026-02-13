@@ -1,0 +1,33 @@
+.env
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# SQLite (if using local db)
+*.db
+
+# Test coverage
+.coverage
+htmlcov/
+
+# Build files
+dist/
+build/
+*.egg-info/
