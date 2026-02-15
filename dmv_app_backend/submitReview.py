@@ -15,7 +15,7 @@ class ReviewIn(BaseModel):
     satisfied_count: int = Field(..., ge=1, le=5)
     experience: str
 
-@router.post("/reviews")
+@router.post("/submit/reviews")
 def create_review(review: ReviewIn):
     db = SessionLocal()
     try:
