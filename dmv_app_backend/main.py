@@ -5,6 +5,7 @@ from db import SessionLocal
 from models import states, sections, topics, reviews
 from summarizeSection import router as summarize_section
 from submitReview import router as create_review
+from chatResponse import router as chat_response
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -34,7 +35,12 @@ def get_states():
 @app.get("/states/{state_id}/sections")
 def get_sections(state_id: int):
     db = SessionLocal()
-    result = db.execute(select(sections).where(sections.c.state_id == state_id)).fetchall()
+    result = db.execute(
+        select(sections)
+        .where(sections.c.state_id == state_id)
+        .order_by(sections.c.id)
+    ).fetchall()
+
     db.close()
     return [dict(r._mapping) for r in result]
 
@@ -63,4 +69,6 @@ def get_section(id):
 
 app.include_router(summarize_section)
 app.include_router(create_review)
+app.include_router(chat_response)
+
 

@@ -22,22 +22,34 @@ def cosine_similarity(a, b):
 
 @router.post("/sections/{section_id}/summary")
 def summarize_section(section_id: int, query: str = "summarize"):
+    
     db = SessionLocal()
     results = db.execute(select(topics).where(topics.c.section_id == section_id)).fetchall()
     
     # get all topic texts and embeddings
     topic_texts = [r._mapping['content'] for r in results]
-    embeddings = [r._mapping['embedding'] for r in results]
+    if len(topic_texts) == 0:
+        return {"summary": "Cannot summarize this section at the moment"}
+
+    full_text = "\n\n".join(topic_texts)
     
-    # optional: simple RAG selection (closest topic to query)
-    res = client.embeddings.create(input=query, model="text-embedding-3-small")
-    query_emb = res.data[0].embedding
-    similarities = [cosine_similarity(np.array(query_emb), np.array(e)) for e in embeddings]
-    top_index = np.argmax(similarities)
-    context = topic_texts[top_index]
+    # embeddings = [r._mapping['embedding'] for r in results]
+    
+    # # optional: simple RAG selection (closest topic to query)
+    # res = client.embeddings.create(input=query, model="text-embedding-3-small")
+    # query_emb = res.data[0].embedding
+    # similarities = [cosine_similarity(np.array(query_emb), np.array(e)) for e in embeddings]
+    # top_index = np.argmax(similarities)
+    # context = topic_texts[top_index]
+    # print("Contrxt+++++",context)
     
     # call OpenAI to summarize
-    prompt = f"Summarize this in detail for someone learning to drive:\n\n{context}"
+    prompt = f"""
+    Summarize the following DMV section clearly and simply but in detail:
+
+    {full_text}
+    """
+
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
