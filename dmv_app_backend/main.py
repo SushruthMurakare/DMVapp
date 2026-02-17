@@ -52,6 +52,15 @@ def get_reviews():
     db.close()
     return [dict(r._mapping) for r in result]
 
+@app.get("/section/{id}")
+def get_section(id):
+    db = SessionLocal()
+    result = db.execute(select(sections).where(sections.c.id == id)).fetchall()
+    db.close()
+    return [dict(r._mapping) for r in result]
+
+
+
 app.include_router(summarize_section)
 app.include_router(create_review)
 

@@ -4,6 +4,7 @@ import ColoradoImg from "./assets/Colorado.jpg";
 import Sections from "./components/Sections/Sections";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Reviews from "./components/Reviews/Review";
+import SectionDetails from "./components/Sections/SectionDetails";
 
 
 const appContainer: React.CSSProperties = {
@@ -39,6 +40,8 @@ function App() {
           <Route path="/" element={<Navigate to="/sections" />} /> 
           <Route path="/sections" element={<Sections />} />
           <Route path="/reviews" element={<Reviews />} />
+          <Route path="/sections/:id" element={<SectionDetails />} />
+
 
         </Routes>
         </main>

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from sqlalchemy import select
+from sqlalchemy import select, update
 from db import SessionLocal
-from models import topics
+from models import topics, sections
 from openai import OpenAI
 import numpy as np
 from dotenv import load_dotenv
@@ -20,7 +20,7 @@ client = OpenAI(api_key=api_key)
 def cosine_similarity(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
-@router.get("/sections/{section_id}/summary")
+@router.post("/sections/{section_id}/summary")
 def summarize_section(section_id: int, query: str = "summarize"):
     db = SessionLocal()
     results = db.execute(select(topics).where(topics.c.section_id == section_id)).fetchall()
@@ -45,6 +45,14 @@ def summarize_section(section_id: int, query: str = "summarize"):
     )
     summary_text = completion.choices[0].message.content
     
+    db.execute(
+        update(sections)
+        .where(sections.c.id == section_id)
+        .values(summary=summary_text)
+    )
+    
+    db.commit()
+
     
     db.close()
     return {"summary": summary_text}

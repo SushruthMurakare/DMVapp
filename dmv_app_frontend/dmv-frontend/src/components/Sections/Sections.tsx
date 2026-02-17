@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { fetchSections } from "./api";
 import type { Section } from "./api";
+import { useNavigate } from "react-router-dom";
+
 
 const Sections: React.FC = () => {
   const [sections, setSections] = useState<Section[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     fetchSections()
@@ -27,6 +32,7 @@ const Sections: React.FC = () => {
       {sections.map((section) => (
         <div
           key={section.id}
+          onClick={() => navigate(`/sections/${section.id}`)}
           style={{
             border: "1px solid #00000",
             borderRadius: "8px",

@@ -18,7 +18,8 @@ sections = Table(
     Column("id", Integer, primary_key=True),
     Column("state_id", Integer, ForeignKey("states.id")),
     Column("title", String, nullable=False),
-    Column("order_number", Integer)
+    Column("order_number", Integer),
+    Column("summary", String)
 )
 
 topics = Table(
